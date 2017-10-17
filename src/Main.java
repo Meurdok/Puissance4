@@ -9,28 +9,31 @@ public class Main {
 	private final static int LARGEUR_MAX = 7;
 	private final int TEMPS = 5;
 	
-	/* Pas sur qu'il soit utile en java
-	private final String[] finDePartie = {"NON", "MATCHNUL", "ORDI_GAGNE", "HUMAIN_GAGNE"};
-	*/
+	private static boolean gagnantNul = false;
+	private static boolean gagnantHumain = false;
+	private static boolean gagnantOrdi = false;
 	
-	private Etat etatCourant;
-	
-	private void afficherJeu() {
-		// TODO
-	}
+	private static Etat etatCourant;
+	private static Coup coupCourant;
+
 	
 	public static void main(String[] args) {
-		Coup coup = demanderCoup();
-		// variable FinDePartie fin dans jeu.c peut et sera je pense gere autrement
-		
+		System.out.println("PUISSANCE 4 - MCTS");
 		// initialisation
-		Etat etat = new Etat();
+			etatCourant = new Etat();
+				
 		
 		// Choisir qui commence
-		etat.setJoueur(demanderJoueurCommence());
+		etatCourant.setJoueur(demanderJoueurCommence());
+		
 		
 		// boucle de jeu
 		// TODO
+		while(!partieTerminee()) {		
+			affichageTour();
+			coupCourant = demanderCoup();
+			jouerCoup();
+		}
 		
 		// Affichages de fin
 		// TODO
@@ -50,13 +53,20 @@ public class Main {
 					saisieOk = true;
 				
 			}catch(Exception e) {
-				System.out.println("Mauvaise saisie");
+				//System.out.println("Mauvaise saisie");
 				saisieOk = false;
 			}
 		}
 		return str;
 	}
 	
+	private static void affichageTour() {
+		if(etatCourant.getJoueur() == 1)
+			System.out.println("C'est au tour de l'ordinateur");
+		else
+			System.out.println("C'est au tour de l'humain");
+		System.out.println(etatCourant.toString());
+	}
 	
 	private static Coup demanderCoup() {
 		Scanner sc;
@@ -67,7 +77,8 @@ public class Main {
 			System.out.println("Jouer quelle colonne ? (0-6)");
 			try {
 				str = sc.nextInt();
-				if(str >=0 && str <LARGEUR_MAX)
+				// si on veut jouer dans la grille est que la colonne n'est pas pleine
+				if(str >=0 && str <LARGEUR_MAX && !etatCourant.colonnePleine(str))
 					saisieOk = true;
 				
 			}catch(Exception e) {
@@ -84,8 +95,17 @@ public class Main {
 	// testFin
 	// TODO
 	
-	// jouerCoup
-	// TODO
+	
+	// Si il y a match nul ou qu'un des deux joueurs a gagne, la partie est terminee
+	private static boolean partieTerminee() {
+		return gagnantNul || gagnantOrdi || gagnantHumain;	
+	}
+	
+	
+	// jouerCoup met à jour etatCourant en lui appliquant coupCourant
+	private static void jouerCoup() {
+		etatCourant.jouerCoup(coupCourant);
+	}
 	
 	// fonction copieEtat pas faite car peut etre pas utile
 	

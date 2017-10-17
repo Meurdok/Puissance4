@@ -1,13 +1,11 @@
 // Definition d'un coup
 
 public class Coup {	
-	protected int ligne;
 	protected int colonne;
 	
 	private final int LARGEUR = 7;
 	
-	public Coup() { // constructeur par defaut => -1, -1
-		this.ligne = -1;
+	public Coup() { // constructeur par defaut
 		this.colonne = -1;
 	}
 	
@@ -16,6 +14,10 @@ public class Coup {
 			this.colonne = colonne;
 		}else
 			System.out.println("Coup hors grille");
+	}
+	
+	public int getColonne() {
+		return this.colonne;
 	}
 	
 	// coupsPossibles (ici, ou dans le main...)
