@@ -103,6 +103,22 @@ public class Etat {
 		return this.VALEUR_VIDE;
 	}
 	
+	public char getSymboleHumain() {
+		return this.SYMBOLE_HUMAIN;
+	}
+	
+	public char getSymboleOrdi() {
+		return this.SYMBOLE_ORDI;
+	}
+	
+	public int getLargeur() {
+		return this.LARGEUR;
+	}
+	
+	public int getHauteur() {
+		return this.HAUTEUR;
+	}
+	
 	
 	private int getSommetColonne(int c) {
 		if(colonnePleine(c))
@@ -115,6 +131,13 @@ public class Etat {
 			}
 			return sommet;
 		}
+	}
+	
+	public char getCase(int ligne, int colonne) {
+		char toReturn = ' ';
+		if(ligne < HAUTEUR && colonne < LARGEUR)
+			toReturn = grille[ligne][colonne];
+		return toReturn;
 	}
 	
 }
