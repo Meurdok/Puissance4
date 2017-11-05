@@ -1,4 +1,4 @@
-Rapport Projet IA MPRI : Puissance 4 et MCTS
+Rapport Projet IA MPRI : Puissance 4 et MCTS - Guillaume ROTH - Paul DECANTER
 
 Questions :
 
@@ -13,7 +13,7 @@ En effet, MCTS poussant plutôt à visiter les noeuds qui ont une plus forte ré
 
 5) Comme expliqué précédemment, le mode max cherche à gagner rapidement. Il sera donc très efficace face à un joueur inexpérimenté.
 En revanche, face à un joueur expérimenté, le mode robuste sera nettement plus efficace que le max, étant donné qu'il tient compte des coups humains.
-Les coups joués par le mode robuste seront donc différents de ceux joués par le mode max, bien que chacun soit plus adapté face à un profil de joueur différent. 
+Les coups joués par le mode robuste seront donc différents de ceux joués par le mode max, bien que chacun soit plus adapté face à un profil de joueur différent.
 
 
 6) Premièrement, on a un facteur de branchement moyen très proche de 7.
