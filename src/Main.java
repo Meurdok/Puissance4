@@ -6,17 +6,10 @@ import java.util.Scanner;
 public class Main {
 	
 	// Paramètres de jeu
-	private final static int LARGEUR_MAX = 7;
-	private final int TEMPS = 5;
-	private final static int NB_ALIGN = 4;
-	
-	private static boolean gagnantNul = false;
-	private static boolean gagnantHumain = false;
-	private static boolean gagnantOrdi = false;
+	protected final static int LARGEUR_MAX = 7;
+	protected final static int MAX_TEMPS = 3;
 	
 	private static String gagnant;
-	private static int hauteur;
-	private static int largeur;
 	
 	private static Etat etatCourant;
 	private static Coup coupCourant;
@@ -26,8 +19,7 @@ public class Main {
 		System.out.println("PUISSANCE 4 - MCTS");
 		// initialisation
 			etatCourant = new Etat();
-			hauteur = etatCourant.getHauteur();
-			largeur = etatCourant.getLargeur();
+			gagnant = "NON";
 		
 		// Choisir qui commence
 		etatCourant.setJoueur(demanderJoueurCommence());
@@ -36,9 +28,13 @@ public class Main {
 		// boucle de jeu
 		while(!partieTerminee()) {		
 			affichageTour();
-			coupCourant = demanderCoup();
-			jouerCoup();
-			gagnant = testFin();
+			if(etatCourant.getJoueur() == 0) { // si c'est a l'humain de jouer
+				coupCourant = demanderCoup();
+				jouerCoup();
+			}else { // si c'est à la machine de jouer
+				ordiJoueMCTS(1, MAX_TEMPS);
+			}
+			gagnant = etatCourant.testFin();
 		}
 		
 		// Affichages de fin
@@ -95,94 +91,11 @@ public class Main {
 		}
 		return new Coup(str);
 	}
-	
-	// ordiJoueMCTS 
-	// TODO
-	
-	// Teste si c'est termine (4 alignes) en designant un gagnant. Cas nul et non termine geres
-	private static String testFin() {
-		int k, coupsJoues = 0;
-		char tempSymbole, tempCase;
-		for(int i=0; i<hauteur; i++) {
-			for(int j=0; j<largeur; j++) {
-				if(etatCourant.getCase(i, j) != etatCourant.getValeurVide()) {
-					coupsJoues ++;
-					tempCase = etatCourant.getCase(i, j);
-					tempSymbole = etatCourant.getCase(i, j); 
-					
-					// colonnes
-					k = 0;
-					while (k < NB_ALIGN && i+k < hauteur && etatCourant.getCase(i+k, j) == tempCase)
-						k++;
-					if(k == NB_ALIGN) {
-						if(tempSymbole == etatCourant.getSymboleOrdi()) {
-							gagnantOrdi = true;
-							return "ORDI";
-						}else {
-							gagnantHumain = true;
-							return "HUMAIN";
-						}
-					}
-					
-					// lignes
-					k = 0;
-					while (k < NB_ALIGN && j+k < largeur && etatCourant.getCase(i, j+k) == tempCase)
-						k++;
-					if(k == NB_ALIGN) {
-						if(tempSymbole == etatCourant.getSymboleOrdi()) {
-							gagnantOrdi = true;
-							return "ORDI";
-						}else {
-							gagnantHumain = true;
-							return "HUMAIN";
-						}
-					}
-					
-					// diagonales
-					k = 0;
-					while(k < NB_ALIGN && i+k < hauteur && j+k < largeur && etatCourant.getCase(i+k, j+k) == tempCase)
-						k++;
-					if(k == NB_ALIGN) {
-						if(tempSymbole == etatCourant.getSymboleOrdi()) {
-							gagnantOrdi = true;
-							return "ORDI";
-						}
-						else {
-							gagnantHumain = true;
-							return "HUMAIN";
-						}
-					}
-					
-					k = 0;
-					while(k < NB_ALIGN && i+k < hauteur && j-k >= 0 && etatCourant.getCase(i+k, j-k) == tempCase)
-						k++;
-					if(k == NB_ALIGN) {
-						if(tempSymbole == etatCourant.getSymboleOrdi()) {
-							gagnantOrdi = true;
-							return "ORDI";
-						}else {
-							gagnantHumain = true;
-							return "HUMAIN";
-						}
-					}
-					
-				}
-			}
-		}
 		
-		// sinon tester le match nul
-		if(coupsJoues == etatCourant.getLargeur() * etatCourant.getHauteur()) {
-			gagnantNul = true;
-			return "NUL";
-		}
-		
-		return "NON";
-	}
-	
 	
 	// Si il y a match nul ou qu'un des deux joueurs a gagne, la partie est terminee
 	private static boolean partieTerminee() {
-		return gagnantNul || gagnantOrdi || gagnantHumain;	
+		return etatCourant.estFinal();
 	}
 	
 	
@@ -191,8 +104,66 @@ public class Main {
 		etatCourant.jouerCoup(coupCourant);
 	}
 	
-	// fonction copieEtat pas faite car peut etre pas utile
+	// fonction qui applique mcts pour faire jouer l'IA
+	private static void ordiJoueMCTS(int joueur, int maxTemps) {
+		long debut = System.currentTimeMillis();
+		long tempTmp = debut;
+		long tempTmpSec = (tempTmp - debut) / 1000; // pour avoir le temps en secondes
+		
+		int resPartie = -1; // variable resultat des parties 
+		
+		Noeud racine = new Noeud(etatCourant, etatCourant.getAutreJoueur());
+		Noeud noeudCourant = racine;
+		
+		while(tempTmpSec < maxTemps) { // enchainement de fonctions comme sur le poly du cours (p32)
+			noeudCourant = selectionner(noeudCourant, joueur);
+			if(!noeudCourant.estFinal()) {
+				noeudCourant = developper(noeudCourant);
+				resPartie = simuler(noeudCourant);
+			}
+			noeudCourant = mettreAJour(noeudCourant, resPartie);
+			
+			tempTmpSec = (System.currentTimeMillis()-debut)/1000;
+		}
+		Coup aJouer = noeudCourant.getBValeurMax(joueur).getEtat().getDernierCoup();
+		etatCourant.jouerCoup(aJouer);
+	}
 	
+	public static Noeud selectionner(Noeud noeud, int joueur) {
+		if(noeud.estFinal() || noeud.getNbEnfants() == 0)
+			return noeud;
+		return selectionner(noeud.getBValeurMax(joueur), joueur);
+	}
 	
+	public static Noeud developper(Noeud noeud) {
+		return noeud.getNoeudSuivant();
+	}
 	
+	public static int simuler(Noeud noeud) {
+		Noeud copie = new Noeud(noeud);
+		return marcheAleatoire(copie);
+	}
+	
+	public static int marcheAleatoire(Noeud noeud) {
+		// On cherche en profondeur de facon aleatoire une fin de partie
+		while(!noeud.estFinal())
+			noeud = noeud.getEnfantRand();
+		
+		// On recupere la valeur de fin
+		String resPartie = noeud.getEtat().testFin();
+		if(resPartie.equals("ORDI")) // si l'ordi a gagne, l'execution de la marche aleatoire est un succes
+			return 1;
+		else
+			return 0;	
+	}
+	
+	// Pour mettre a jour tout l'arbre avec le nouveau nombre de simulations et de victoires
+	public static Noeud mettreAJour(Noeud noeud, int nbVictoires) {
+		while(!noeud.estRacine()) {
+			noeud.incNbSimulations();
+			noeud.incNbVictoires();
+			noeud = noeud.getParent();
+		}
+		return noeud;
+	}
 }
