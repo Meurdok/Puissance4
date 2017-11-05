@@ -127,6 +127,7 @@ public class Main {
 		}
 		Noeud BValeurMax = noeudCourant.getBValeurMax(joueur);
 		System.out.println(BValeurMax.toString());
+		System.out.println("Temps écoulé : "+tempTmpSec+"\n");
 		Coup aJouer = BValeurMax.getEtat().getDernierCoup();
 		etatCourant.jouerCoup(aJouer);
 	}
@@ -153,7 +154,8 @@ public class Main {
 		
 		// On recupere la valeur de fin
 		String resPartie = noeud.getEtat().testFin();
-		if(resPartie.equals("ORDI") && noeud.getEtat().getJoueur() == 1) // si l'ordi a gagne, l'execution de la marche aleatoire est un succes
+		System.out.println("resPartie : "+resPartie);
+		if(resPartie.equals("ORDI")) // si l'ordi a gagne, l'execution de la marche aleatoire est un succes
 			return 1;
 		else
 			return 0;	
