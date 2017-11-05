@@ -1,22 +1,14 @@
-import java.util.ArrayList;
-
 // Definition de l'etat / la position du jeu
 
 public class Etat {
 	protected int joueur; // le joueur dont on attend l'input
 	protected char[][] grille; // la grille de 6 x 7
-	protected Coup dernierCoup; // le dernier coup joue = le coup joue pour arriver a cet etat
-	
 	protected final int LARGEUR = 7;
 	protected final int HAUTEUR = 6;
 	
 	protected final char VALEUR_VIDE = 'O';
 	protected final char SYMBOLE_HUMAIN = '#';
 	protected final char SYMBOLE_ORDI = '@';
-	
-	protected final static int LARGEUR_MAX = 7;
-	protected final int TEMPS = 5;
-	protected final static int NB_ALIGN = 4;
 
 	
 	// ------------------ CONSTRUCTEURS ------------------------------------
@@ -31,23 +23,21 @@ public class Etat {
 		}
 	}
 	
-	// Utile pour la construction de l'arbre pour le MCTS
-	public Etat(Etat aCopier) { // constructeur de copie
-		this.grille = new char[HAUTEUR][LARGEUR];
-		for(int i = 0; i < HAUTEUR; i++) {
-			for(int j = 0; j < LARGEUR; j++) {
-				this.grille[i][j] = aCopier.getCase(i, j); 
-			}
+	// Probablement utile pour la construction de l'arbre pour le MCTS
+	public Etat(int joueur, char[][] grille) { // constructeur d'un etat 'classique'
+		if(parametersOK(joueur, grille)) { 
+			this.joueur = joueur;
+			this.grille = grille;			
+		}else {
+			System.out.println("Mauvais paramètres passes au constructeur Etat");
 		}
-		this.dernierCoup = aCopier.getDernierCoup();
 	}
 	
 	
 	
-	// ------------------- FONCTIONS -----------------------------
+	// ------------------- FONCTIONS DE FONCTIONNEMENT -----------------------------
 	
 	public void jouerCoup(Coup coup) {
-		this.dernierCoup = coup;
 		int colonne = coup.getColonne();
 		int ligne = getSommetColonne(colonne);
 		char aPoser;
@@ -55,10 +45,18 @@ public class Etat {
 			aPoser = SYMBOLE_ORDI;
 		else
 			aPoser = SYMBOLE_HUMAIN;
-		grille[ligne][colonne] = aPoser;	
+		grille[ligne][colonne] = aPoser;
 		changerJoueur();
 	}
 	
+	
+	// on ne peut pas accepter de grille plus grande ou plus petite que 6 x 7, 
+	// ni de joueur autre que 0 ou 1
+	private boolean parametersOK(int joueur, char[][] grille) {
+		return (grille[0].length == LARGEUR 
+				&& grille.length == HAUTEUR 
+				&& (joueur == 0 || joueur == 1));
+	}
 	
 	private void changerJoueur() {
 		if(this.joueur == 1)
@@ -181,6 +179,7 @@ public class Etat {
 		}
 		return succ;
 	}
+
 	
 	// ------------- GETTERS & SETTERS -----------------
 	
@@ -204,6 +203,14 @@ public class Etat {
 		return this.SYMBOLE_ORDI;
 	}
 	
+	public int getLargeur() {
+		return this.LARGEUR;
+	}
+	
+	public int getHauteur() {
+		return this.HAUTEUR;
+	}
+	
 	
 	private int getSommetColonne(int c) {
 		if(colonnePleine(c))
@@ -225,13 +232,4 @@ public class Etat {
 		return toReturn;
 	}
 	
-	public Coup getDernierCoup() {
-		return this.dernierCoup;
-	}
-	
-	public int getAutreJoueur() {
-		if(this.joueur == 1)
-			return 0;
-		return 1;
-	}
 }

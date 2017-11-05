@@ -112,7 +112,7 @@ public class Main {
 		
 		int resPartie = -1; // variable resultat des parties 
 		
-		Noeud racine = new Noeud(etatCourant, 1);
+		Noeud racine = new Noeud(etatCourant, etatCourant.getAutreJoueur());
 		Noeud noeudCourant = racine;
 		
 		while(tempTmpSec < maxTemps) { // enchainement de fonctions comme sur le poly du cours (p32)

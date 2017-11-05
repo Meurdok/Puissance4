@@ -19,5 +19,7 @@ public class Coup {
 	public int getColonne() {
 		return this.colonne;
 	}
-
+	
+	// coupsPossibles (ici, ou dans le main...)
+	// TODO
 }
