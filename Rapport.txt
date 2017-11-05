@@ -1,18 +1,24 @@
 Rapport Projet IA MPRI : Puissance 4 et MCTS
 
 Questions :
-1)
+
+2) Même au bout de 10 secondes de calcul, l'ordinateur ne me bat pas à tous les coups.
+En effet, celui-ci cherche plutôt à aligner des jetons, en gérant parfois plusieurs "piles" à la fois.
+Il ne cherche pas à bloquer les jetons du joueur humain.
 
 
-2)
+3) Etant donné que cette amélioration tient également compte de la victoire adverse (la nôtre), l'IA est devenue plus complexe à battre.
+En effet, MCTS poussant plutôt à visiter les noeuds qui ont une plus forte récompense au détriment des noeuds les plus visités, vise une victoire rapide sans essayer de nous bloquer.
 
 
-3)
+5) Comme expliqué précédemment, le mode max cherche à gagner rapidement. Il sera donc très efficace face à un joueur inexpérimenté.
+En revanche, face à un joueur expérimenté, le mode robuste sera nettement plus efficace que le max, étant donné qu'il tient compte des coups humains.
+Les coups joués par le mode robuste seront donc différents de ceux joués par le mode max, bien que chacun soit plus adapté face à un profil de joueur différent. 
 
 
-5)
-
-
-6)
-
-
+6) Premièrement, on a un facteur de branchement moyen très proche de 7.
+En effet, le plateau possède 3 colonnes de taille identique.
+On a donc 7 successeurs tant qu'au moins une colonne n'est pas pleine.
+Dans le cas d'une égalité, c'est à dire le cas où tout le plateau est rempli sans victoire d'un joueur, on a rempli les 42 cases.
+On a alors une profondeur max s'élevant à 42, soit 7^42 possibilités / états fils (et petits, petits... fils) de la racine.
+Sachant qu'une machine effectue 3 milliards d'opérations à la seconde (3GHz), il faudra (7^42)/3 millards * 10^26 secondes, soit 10^18 années pour calculer le premier déplacement.
