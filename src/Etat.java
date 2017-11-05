@@ -174,7 +174,7 @@ public class Etat {
 		for(int i = 0; i < LARGEUR; i++) {
 			etatTmp = new Etat(this);
 			if(!etatTmp.colonnePleine(i)) {
-				etatTmp.changerJoueur();
+				//etatTmp.changerJoueur();
 				etatTmp.jouerCoup(new Coup(i));
 				succ.add(etatTmp);
 			}

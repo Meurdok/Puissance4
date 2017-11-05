@@ -158,11 +158,18 @@ public class Noeud {
 		this.nbSimulations ++;
 	}
 	
-	public void incNbVictoires() {
-		this.nbVictoires ++;
+	public void incNbVictoires(int inc) {
+		this.nbVictoires += inc;
 	}
 	
-	
+	public String toString() {
+		String toReturn = "";
+		toReturn += "Informations sur le noeud\n";
+		toReturn += "Nb simulations effectuees : "+this.nbSimulations+"\n";
+		toReturn += "Nb victoires possibles : "+this.nbVictoires+"\n";
+		toReturn += "Nb enfants : "+this.enfants.size()+"\n";
+		return toReturn;	
+	}
 	
 	// -------------------------- GETTERS / SETTERS -------------------------
 	

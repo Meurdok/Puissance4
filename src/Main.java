@@ -112,7 +112,7 @@ public class Main {
 		
 		int resPartie = -1; // variable resultat des parties 
 		
-		Noeud racine = new Noeud(etatCourant, etatCourant.getAutreJoueur());
+		Noeud racine = new Noeud(etatCourant, 1);
 		Noeud noeudCourant = racine;
 		
 		while(tempTmpSec < maxTemps) { // enchainement de fonctions comme sur le poly du cours (p32)
@@ -125,7 +125,9 @@ public class Main {
 			
 			tempTmpSec = (System.currentTimeMillis()-debut)/1000;
 		}
-		Coup aJouer = noeudCourant.getBValeurMax(joueur).getEtat().getDernierCoup();
+		Noeud BValeurMax = noeudCourant.getBValeurMax(joueur);
+		System.out.println(BValeurMax.toString());
+		Coup aJouer = BValeurMax.getEtat().getDernierCoup();
 		etatCourant.jouerCoup(aJouer);
 	}
 	
@@ -151,7 +153,7 @@ public class Main {
 		
 		// On recupere la valeur de fin
 		String resPartie = noeud.getEtat().testFin();
-		if(resPartie.equals("ORDI")) // si l'ordi a gagne, l'execution de la marche aleatoire est un succes
+		if(resPartie.equals("ORDI") && noeud.getEtat().getJoueur() == 1) // si l'ordi a gagne, l'execution de la marche aleatoire est un succes
 			return 1;
 		else
 			return 0;	
@@ -161,7 +163,7 @@ public class Main {
 	public static Noeud mettreAJour(Noeud noeud, int nbVictoires) {
 		while(!noeud.estRacine()) {
 			noeud.incNbSimulations();
-			noeud.incNbVictoires();
+			noeud.incNbVictoires(nbVictoires);
 			noeud = noeud.getParent();
 		}
 		return noeud;
