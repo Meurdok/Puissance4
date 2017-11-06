@@ -64,8 +64,6 @@ public class Noeud {
 		this.enfants = new ArrayList<Noeud>();
 		for(Noeud n : aCopier.getEnfants())
 			this.enfants.add(n);
-		this.nbVictoires = aCopier.getNbVictoires();
-		this.nbSimulations = aCopier.getNbSimulations();
 	}
 	
 	
@@ -155,7 +153,7 @@ public class Noeud {
 	}
 	
 	public void incNbSimulations() {
-		this.nbSimulations ++;
+		this.nbSimulations += 1;
 	}
 	
 	public void incNbVictoires(int inc) {

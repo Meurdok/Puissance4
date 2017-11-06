@@ -154,7 +154,6 @@ public class Main {
 		
 		// On recupere la valeur de fin
 		String resPartie = noeud.getEtat().testFin();
-		System.out.println("resPartie : "+resPartie);
 		if(resPartie.equals("ORDI")) // si l'ordi a gagne, l'execution de la marche aleatoire est un succes
 			return 1;
 		else

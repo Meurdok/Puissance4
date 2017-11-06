@@ -176,6 +176,7 @@ public class Etat {
 			if(!etatTmp.colonnePleine(i)) {
 				etatTmp.changerJoueur();
 				etatTmp.jouerCoup(new Coup(i));
+				etatTmp.changerJoueur();
 				succ.add(etatTmp);
 			}
 		}
