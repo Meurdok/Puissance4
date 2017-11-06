@@ -101,7 +101,7 @@ public class Noeud {
 			if(e.getNbSimulations() == 0 || e.getNbVictoires() == 0) 
 				ratioVS = 0;
 			else
-				ratioVS = victDef *(float)(e.getNbVictoires() / e.getNbSimulations());
+				ratioVS = victDef *((float)e.getNbVictoires() / (float)e.getNbSimulations());
 			
 			if(e.getNbSimulations() == 0 || nbSimulations == 0)
 				partForm = 0;
