@@ -14,12 +14,15 @@ public class Main {
 	private static Etat etatCourant;
 	private static Coup coupCourant;
 
+	private static int typeIA;
 	
 	public static void main(String[] args) {
 		System.out.println("PUISSANCE 4 - MCTS");
 		// initialisation
 			etatCourant = new Etat();
 			gagnant = "NON";
+		
+		setTypeIA();
 		
 		// Choisir qui commence
 		etatCourant.setJoueur(demanderJoueurCommence());
@@ -61,6 +64,30 @@ public class Main {
 			}
 		}
 		return str;
+	}
+	
+	private static void setTypeIA() {
+		Scanner sc;
+		int str =-1;
+		boolean saisieOk = false;
+		while(!saisieOk) {
+			sc = new Scanner(System.in);
+			System.out.println("Quelle IA (0 : BValeurMax, 1 : Robustesse) ? ");
+			try {
+				str = sc.nextInt();
+				if(str == 0 || str == 1)
+					saisieOk = true;
+				
+			}catch(Exception e) {
+				//System.out.println("Mauvaise saisie");
+				saisieOk = false;
+			}
+		}
+		typeIA = str;
+		if (typeIA == 0)
+			System.out.println("IA BValeurMax selectionnee");
+		else
+			System.out.println("IA Robustesse selecitonnee");
 	}
 	
 	private static void affichageTour() {
@@ -125,10 +152,18 @@ public class Main {
 			
 			tempTmpSec = (System.currentTimeMillis()-debut)/1000;
 		}
-		Noeud BValeurMax = noeudCourant.getBValeurMax(joueur);
-		System.out.println(BValeurMax.toString());
+		
+		Noeud valeurUtilisee;
+		if(typeIA == 0)
+			// si on prend BvaleurMax
+			valeurUtilisee = noeudCourant.getBValeurMax(joueur);
+		else
+			// si on prend robustesse
+			valeurUtilisee = noeudCourant.getRobustesseMax(joueur);
+		
+		System.out.println(valeurUtilisee.toString());
 		System.out.println("Temps écoulé : "+tempTmpSec+"\n");
-		Coup aJouer = BValeurMax.getEtat().getDernierCoup();
+		Coup aJouer = valeurUtilisee.getEtat().getDernierCoup();
 		etatCourant.jouerCoup(aJouer);
 	}
 	

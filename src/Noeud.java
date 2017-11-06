@@ -80,8 +80,7 @@ public class Noeud {
 		return 1;
 	}
 	
-	public Noeud getBValeurMax(int joueur) {
-		Noeud meilleurChoix = null;
+	public Noeud getBValeurMax(int joueur) { // max	
 		
 		float ratioVS; // ratio Victoires / Simulations
 		float c = (float) Math.sqrt(2); // constante c (cf enonce)
@@ -95,6 +94,8 @@ public class Noeud {
 			victDef = -1;
 		else
 			victDef = 1;
+		
+		Noeud meilleurChoix = null;
 		
 		for(Noeud e : enfants) {
 			// si aucune simulation ou aucune victoire pour cet enfant
@@ -115,6 +116,18 @@ public class Noeud {
 			}
 		}
 		
+		return meilleurChoix;
+	}
+	
+	public Noeud getRobustesseMax(int joueur) {
+		float max = Float.NEGATIVE_INFINITY;
+		Noeud meilleurChoix = null;
+		for(Noeud e : enfants) {
+			if(e.getNbSimulations() > max) {
+				max = e.getNbSimulations();
+				meilleurChoix = e;
+			}
+		}
 		return meilleurChoix;
 	}
 	
