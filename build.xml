@@ -1,0 +1,24 @@
+<project name="Puissance4" basedir="." default="run">
+  <target name="clean">
+    <delete dir="bin"/>
+    <delete dir="exe"/>
+  </target>
+  
+  <target name="compile" depends="clean">
+    <mkdir dir="bin"/>
+    <javac srcdir="src" destdir="bin"/>
+  </target>
+  
+  <target name="jar" depends="compile">
+    <mkdir dir="exe"/>
+    <jar destfile="exe/Puissance4.jar" basedir="bin">
+      <manifest>
+	<attribute name="Main-Class" value="Main"/>
+      </manifest>
+    </jar>
+  </target>
+  
+  <target name="run" depends="jar">
+    <java jar="exe/Puissance4.jar" fork="true"/>
+  </target>
+</project>
